@@ -1,22 +1,23 @@
 import React from "react";
-import Button from "./button";
-import { Typography } from "@mui/material";
+import { Card, CardContent, CardActions, Typography, Button } from '@mui/material';
 
 const QuoteMachine = (props) => {
   return (
-    <>
-      {props.selectedQuote
-        ?
-        (<Typography>
-          {props.selectedQuote.quote} - {props.selectedQuote.author}
-        </Typography>)
-        : null
-        }
-      <Button
-        buttonDisplayName="Next Quote"
-        clickHandler={props.assignNewQuoteIndex}
-      />
-    </>
+    <Card>
+      <CardContent>
+        {props.selectedQuote
+          ?
+          (<Typography>
+            {props.selectedQuote.quote} - {props.selectedQuote.author}
+          </Typography>)
+          : null
+          }
+      </CardContent>
+
+      <CardActions>
+        <Button size="small" onClick={props.assignNewQuoteIndex}>Next Quote</Button>
+      </CardActions>
+    </Card>
   );
 };
 
