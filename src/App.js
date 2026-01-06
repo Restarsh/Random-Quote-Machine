@@ -2,9 +2,16 @@ import React, {Component} from 'react';
 import { random } from 'lodash';
 import 'typeface-roboto';
 import QuoteMachine from './components/QuoteMachine';
-import { Grid } from '@mui/material';
+import { Grid} from '@mui/material'; 
+import { withStyles } from '@mui/styles';
 
-
+const styles = {
+  container:{
+    display: 'flex',
+    height: '100vh',
+    alignItems: 'center',
+  }
+};
 
 class App extends Component {
   constructor(props){
@@ -44,7 +51,7 @@ class App extends Component {
 
   render() {
     return (
-      <Grid id="quote-box" justifyContent={'center'} container>
+      <Grid className={this.props.classes.container} id="quote-box" justifyContent={'center'} container>
         <Grid item>
           <QuoteMachine selectedQuote={this.selectedQuote} assignNewQuoteIndex={this.assignNewQuoteIndex}/>
         </Grid>
@@ -53,4 +60,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withStyles(styles) (App);
