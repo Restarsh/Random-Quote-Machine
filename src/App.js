@@ -1,7 +1,10 @@
 import React, {Component} from 'react';
 import { random } from 'lodash';
-import './App.css';
+import 'typeface-roboto';
 import QuoteMachine from './components/QuoteMachine';
+import { Grid } from '@mui/material';
+
+
 
 class App extends Component {
   constructor(props){
@@ -41,9 +44,11 @@ class App extends Component {
 
   render() {
     return (
-      <div className='App' id='quote-box'>
-        <QuoteMachine selectedQuote={this.selectedQuote} assignNewQuoteIndex={this.assignNewQuoteIndex}/>
-      </div>
+      <Grid id="quote-box" justifyContent={'center'} container>
+        <Grid item>
+          <QuoteMachine selectedQuote={this.selectedQuote} assignNewQuoteIndex={this.assignNewQuoteIndex}/>
+        </Grid>
+      </Grid>
     );
   }
 }
