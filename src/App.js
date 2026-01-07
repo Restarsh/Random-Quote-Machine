@@ -1,63 +1,69 @@
-import React, {Component} from 'react';
+// App.js
+import React, { useEffect, useState } from 'react';
 import { random } from 'lodash';
 import 'typeface-roboto';
+import { Container, Grid } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import QuoteMachine from './components/QuoteMachine';
-import { Grid} from '@mui/material'; 
-import { withStyles } from '@mui/styles';
 
-const styles = {
-  container:{
-    display: 'flex',
-    height: '100vh',
-    alignItems: 'center',
-  }
-};
+const StyledContainer = styled('div')({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  minHeight: '100vh',
+  width: '100%',
+});
 
-class App extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      quotes: [],
-      selectedQuoteIndex: null,
-    }
-    this.assignNewQuoteIndex = this.assignNewQuoteIndex.bind(this);
-    this.generateNewQuoteIndex = this.generateNewQuoteIndex.bind(this);
-  }
+function App() {
+  const [quotes, setQuotes] = useState([]);
+  const [selectedQuoteIndex, setSelectedQuoteIndex] = useState(null);
 
-  componentDidMount() {
-    fetch('https://gist.githubusercontent.com/natebass/b0a548425a73bdf8ea5c618149fe1fce/raw/f4231cd5961f026264bb6bb3a6c41671b044f1f4/quotes.json')
-      .then(data => data.json())
-      .then(quotes => this.setState({ quotes }, this.assignNewQuoteIndex));
-  }
+  useEffect(() => {
+    const fetchQuotes = async () => {
+      try {
+        const response = await fetch(
+          'https://gist.githubusercontent.com/natebass/b0a548425a73bdf8ea5c618149fe1fce/raw/f4231cd5961f026264bb6bb3a6c41671b044f1f4/quotes.json'
+        );
+        if (!response.ok) throw new Error('Failed to fetch quotes');
+        const data = await response.json();
+        setQuotes(data);
+        setSelectedQuoteIndex(random(0, data.length - 1));
+      } catch (error) {
+        console.error('Error loading quotes:', error);
+      }
+    };
 
-  get selectedQuote() {
-    if (!this.state.quotes.length || !Number.isInteger(this.state.selectedQuoteIndex)) {
-      return null;
-    }
-    return this.state.quotes[this.state.selectedQuoteIndex];
-  }
+    fetchQuotes();
+  }, []);
 
-  assignNewQuoteIndex() {
-    this.setState({ selectedQuoteIndex: this.generateNewQuoteIndex() })
+  const getSelectedQuote = () => {
+    if (!quotes.length || selectedQuoteIndex === null) return undefined;
+    return quotes[selectedQuoteIndex];
+  };
 
-  }
-  // Returns an integer representing an index in state.quotes
-  generateNewQuoteIndex() {
-    if (!this.state.quotes.length) {
-      return undefined;
-    }
-    return random(0, this.state.quotes.length - 1);
-  }
+  const assignNewQuoteIndex = () => {
+    if (quotes.length === 0) return;
+    setSelectedQuoteIndex(random(0, quotes.length - 1));
+  };
 
-  render() {
-    return (
-      <Grid className={this.props.classes.container} id="quote-box" justifyContent={'center'} container>
-        <Grid xs={11} lg={8} item>
-          <QuoteMachine selectedQuote={this.selectedQuote} assignNewQuoteIndex={this.assignNewQuoteIndex}/>
+  const selectedQuote = getSelectedQuote();
+
+  return (
+    <StyledContainer id="quote-box">
+      <Container maxWidth="md">
+        <Grid container justifyContent="center">
+          <Grid item xs={12}>
+            {selectedQuote ? (
+              <QuoteMachine
+                selectedQuote={selectedQuote}
+                assignNewQuoteIndex={assignNewQuoteIndex}
+              />
+            ) : null}
+          </Grid>
         </Grid>
-      </Grid>
-    );
-  }
+      </Container>
+    </StyledContainer>
+  );
 }
 
-export default withStyles(styles) (App);
+export default App;
