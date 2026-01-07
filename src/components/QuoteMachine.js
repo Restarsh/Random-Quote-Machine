@@ -49,4 +49,4 @@ const QuoteMachine = ({ selectedQuote, assignNewQuoteIndex }) => {
   );
 };
 
-export default QuoteMachine;sasa
+export default QuoteMachine;
